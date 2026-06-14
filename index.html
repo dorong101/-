@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>화학평형과 르샤틀리에 원리 시뮬레이터 (TDS)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <!-- Custom Inline SVG Logo -->
+      <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+      </svg>
+      <span class="tds-subtitle" style="letter-spacing: -0.3px;">Toss Science Lab</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="tds-caption">상태:</span>
+      <span id="system-status-badge" class="tds-badge small weak-blue">시스템 준비 완료</span>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    
+    <!-- Left Panel: Missions & Theory -->
+    <section class="left-panel">
+      
+      <!-- Theory Card -->
+      <div class="tds-card">
+        <div class="tds-card-title">
+          <span class="tds-subtitle">평형 반응식</span>
+          <span class="tds-badge small weak-elephant">르샤틀리에 원리</span>
+        </div>
+        <div class="theory-section">
+          <div class="theory-formula">
+            2NO₂ <span style="color: var(--tds-color-primary);">⇌</span> N₂O₄ + 열
+          </div>
+          <p class="tds-body-sm" style="line-height: 1.6;">
+            <strong>적갈색</strong>의 이산화질소(NO₂) 기체 2분자가 결합하여 <strong>무색</strong>의 사산화이질소(N₂O₄) 기체 1분자가 되며 열을 방출하는 가역 반응입니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Counter Card -->
+      <div class="tds-card">
+        <div class="tds-card-title">
+          <span class="tds-subtitle">실시간 입자 수</span>
+        </div>
+        <div class="counter-grid">
+          <div class="counter-item">
+            <div class="counter-label">NO₂ (적갈색)</div>
+            <div id="counter-no2" class="counter-value no2">0</div>
+          </div>
+          <div class="counter-item">
+            <div class="counter-label">N₂O₄ (무색)</div>
+            <div id="counter-n2o4" class="counter-value n2o4">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission Board Card -->
+      <div class="tds-card" style="flex-grow: 1;">
+        <div class="tds-card-title">
+          <span class="tds-subtitle">실험 미션 보드</span>
+          <span id="mission-progress-badge" class="tds-badge small fill-blue">0 / 3 완료</span>
+        </div>
+        <div class="mission-list">
+          
+          <!-- Mission 1 -->
+          <div id="mission-1" class="mission-item active">
+            <div class="mission-header">
+              <span class="mission-title">Mission 1. 피스톤 압축</span>
+              <!-- Status Icon SVG -->
+              <svg class="mission-status-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </div>
+            <p class="mission-desc">피스톤을 아래로 밀어 부피를 줄여보세요. 르샤틀리에 원리에 의해 기체 분자 수가 감소하는 정반응이 일어나며 무색(N₂O₄) 입자가 증가합니다.</p>
+          </div>
+
+          <!-- Mission 2 -->
+          <div id="mission-2" class="mission-item">
+            <div class="mission-header">
+              <span class="mission-title">Mission 2. 흡열 반응 유도</span>
+              <svg class="mission-status-icon pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </div>
+            <p class="mission-desc">실린더 온도를 450K 이상으로 올려 가열해보세요. 온도가 높아지면 열을 흡수하는 방향(역반응)으로 평형이 이동해 적갈색(NO₂) 입자가 늘어납니다.</p>
+          </div>
+
+          <!-- Mission 3 -->
+          <div id="mission-3" class="mission-item">
+            <div class="mission-header">
+              <span class="mission-title">Mission 3. 기체 주입과 평형</span>
+              <svg class="mission-status-icon pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </div>
+            <p class="mission-desc">NO₂ 기체를 추가 주입하여 순간적으로 반응 지수 Q를 떨어뜨린 뒤, 새로운 화학 평형(Q = K)에 도달할 때까지 가만히 관찰해보세요.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Center Panel: Cylinder & Rate Graph -->
+    <section class="center-panel">
+      
+      <!-- Cylinder Simulator Card -->
+      <div class="tds-card cylinder-card">
+        <div class="tds-card-title" style="width: 100%;">
+          <span class="tds-subtitle">실린더 시뮬레이터</span>
+          <span class="tds-badge small weak-elephant">미시 & 거시 관찰</span>
+        </div>
+        
+        <!-- Beaker/Cylinder Viewport -->
+        <div class="cylinder-viewport-container">
+          <!-- Gas Overlay for Macro Color Transition -->
+          <div id="gas-overlay-color" class="gas-overlay"></div>
+          
+          <!-- Piston Visual elements -->
+          <div id="piston-cap-element" class="piston-cap">
+            <div class="piston-shaft"></div>
+          </div>
+          
+          <!-- Canvas for Micro Particles -->
+          <canvas id="cylinder-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Real-time Rate Graph Card -->
+      <div class="tds-card">
+        <div class="tds-card-title">
+          <span class="tds-subtitle">반응 속도 실시간 그래프</span>
+          <div style="display: flex; gap: 12px;">
+            <span style="font-size: 11px; display: flex; align-items: center; gap: 4px;">
+              <span style="display:inline-block; width:10px; height:3px; background-color: var(--chem-color-no2);"></span> 정반응 속도 (v_f)
+            </span>
+            <span style="font-size: 11px; display: flex; align-items: center; gap: 4px;">
+              <span style="display:inline-block; width:10px; height:3px; background-color: var(--chem-color-n2o4);"></span> 역반응 속도 (v_r)
+            </span>
+          </div>
+        </div>
+        <div class="graph-viewport-container">
+          <canvas id="graph-canvas"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Panel: Data Gauge & Controls -->
+    <section class="control-panel">
+      
+      <!-- Q vs K Gauge Card -->
+      <div class="tds-card">
+        <div class="tds-card-title">
+          <span class="tds-subtitle">반응 지수(Q) vs 평형 상수(K)</span>
+        </div>
+        <div class="gauge-section">
+          <div style="display: flex; justify-content: space-between; font-size: 13px;">
+            <span>반응 지수 <strong>Q = [N₂O₄]/[NO₂]²</strong></span>
+            <span>평형 상수 <strong>K</strong></span>
+          </div>
+          
+          <!-- Interactive Gauge bar -->
+          <div class="gauge-track">
+            <div id="gauge-marker-k" class="gauge-indicator-k" style="left: 60%;"></div>
+            <div id="gauge-marker-q" class="gauge-indicator-q" style="left: 20%;"></div>
+          </div>
+
+          <div class="gauge-labels">
+            <span>Q = 0 (정반응 극대)</span>
+            <span>평형상태 (Q = K)</span>
+            <span>Q → ∞ (역반응 극대)</span>
+          </div>
+
+          <div id="equilibrium-status-text" class="gauge-status forward">
+            정반응 우세 (평형이 우측으로 이동 중...)
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls Card -->
+      <div class="tds-card" style="flex-grow: 1;">
+        <div class="tds-card-title">
+          <span class="tds-subtitle">실험 컨트롤러</span>
+        </div>
+        
+        <!-- Volume Control Slider -->
+        <div class="slider-group" style="margin-top: 8px;">
+          <div class="slider-header">
+            <span>실린더 부피 (압력 조절)</span>
+            <span id="label-volume" class="slider-value">1.0 L</span>
+          </div>
+          <div class="tds-slider-container">
+            <input type="range" id="slider-volume" min="0.4" max="1.5" step="0.05" value="1.0" class="tds-slider">
+          </div>
+        </div>
+
+        <!-- Temperature Control Slider -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span>온도 (K값 조절)</span>
+            <span id="label-temperature" class="slider-value">298 K</span>
+          </div>
+          <div class="tds-slider-container">
+            <input type="range" id="slider-temperature" min="100" max="600" step="10" value="298" class="tds-slider">
+          </div>
+        </div>
+
+        <div style="height: 1px; background-color: var(--tds-color-border); margin: 8px 0;"></div>
+
+        <!-- Action Buttons Grid -->
+        <div class="button-grid">
+          <button id="btn-inject-no2" class="tds-btn medium weak-primary">
+            NO₂ 주입 (+5)
+          </button>
+          <button id="btn-inject-n2o4" class="tds-btn medium weak-primary">
+            N₂O₄ 주입 (+5)
+          </button>
+          <button id="btn-remove-gases" class="tds-btn medium weak-dark">
+            기체 급속 환기
+          </button>
+          <button id="btn-reset" class="tds-btn medium fill-danger">
+            실험 리셋
+          </button>
+          
+          <button id="btn-auto-run" class="tds-btn large fill-primary full-width" style="margin-top: 16px;">
+            자동 시뮬레이션 시작
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="tds-toast-container">
+    <div id="toast-message" class="tds-toast">
+      메시지가 들어갑니다.
+    </div>
+  </div>
+
+  <!-- Success Overlay Modal -->
+  <div id="success-modal" class="modal-overlay">
+    <div class="tds-dialog">
+      <div class="success-icon-container">
+        <!-- Success Check Icon SVG -->
+        <svg class="success-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <div>
+        <h3 class="tds-heading-lg" style="margin-bottom: 8px;">실험 미션 클리어!</h3>
+        <p class="tds-body-sm" style="line-height: 1.6;">
+          르샤틀리에 원리를 성공적으로 검증하였습니다.<br>압력, 온도, 농도 변화에 따른 화학 평형 이동을 모두 관찰했습니다.
+        </p>
+      </div>
+      <button id="btn-modal-close" class="tds-btn large fill-primary" style="width: 100%;">
+        계속 탐구하기
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 Viva Republica - Toss Science Lab Project. All Rights Reserved.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
