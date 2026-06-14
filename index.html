@@ -11,7 +11,6 @@
   <!-- Header -->
   <header>
     <div class="logo-container">
-      <!-- Custom Inline SVG Logo -->
       <svg class="logo-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
       </svg>
@@ -74,7 +73,6 @@
           <div id="mission-1" class="mission-item active">
             <div class="mission-header">
               <span class="mission-title">Mission 1. 피스톤 압축</span>
-              <!-- Status Icon SVG -->
               <svg class="mission-status-icon active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
               </svg>
@@ -101,7 +99,7 @@
                 <circle cx="12" cy="12" r="10"></circle>
               </svg>
             </div>
-            <p class="mission-desc">NO₂ 기체를 추가 주입하여 순간적으로 반응 지수 Q를 떨어뜨린 뒤, 새로운 화학 평형(Q = K)에 도달할 때까지 가만히 관찰해보세요.</p>
+            <p class="mission-desc">NO₂ 기체를 추가 주입하여 반응 지수 Q를 떨어뜨린 뒤, 새로운 화학 평형(Q = K)에 도달할 때까지 <strong>가만히 대기하며 관찰</strong>해보세요. (온도/압력 조절 불필요)</p>
           </div>
 
         </div>
@@ -121,15 +119,10 @@
         
         <!-- Beaker/Cylinder Viewport -->
         <div class="cylinder-viewport-container">
-          <!-- Gas Overlay for Macro Color Transition -->
           <div id="gas-overlay-color" class="gas-overlay"></div>
-          
-          <!-- Piston Visual elements -->
           <div id="piston-cap-element" class="piston-cap">
             <div class="piston-shaft"></div>
           </div>
-          
-          <!-- Canvas for Micro Particles -->
           <canvas id="cylinder-canvas"></canvas>
         </div>
       </div>
@@ -168,7 +161,6 @@
             <span>평형 상수 <strong>K</strong></span>
           </div>
           
-          <!-- Interactive Gauge bar -->
           <div class="gauge-track">
             <div id="gauge-marker-k" class="gauge-indicator-k" style="left: 60%;"></div>
             <div id="gauge-marker-q" class="gauge-indicator-q" style="left: 20%;"></div>
@@ -252,7 +244,6 @@
   <div id="success-modal" class="modal-overlay">
     <div class="tds-dialog">
       <div class="success-icon-container">
-        <!-- Success Check Icon SVG -->
         <svg class="success-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="3">
           <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
         </svg>
